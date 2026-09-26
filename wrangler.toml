@@ -10,12 +10,12 @@ crons = ["*/5 * * * *"]
 GITHUB_REPO = "mdn/translated-content"
 GITHUB_LABEL = "l10n-es"
 # ID del grupo de Telegram (negativo). Obtenlo escribiendo /chatid en el grupo.
-TELEGRAM_CHAT_ID = ""
+TELEGRAM_CHAT_ID = "-1001587248015"
 
 # Crea el namespace con `npx wrangler kv namespace create STATE` y pega aquí el id.
 [[kv_namespaces]]
 binding = "STATE"
-id = "REEMPLAZA_CON_EL_ID_DEL_NAMESPACE"
+id = "3a8b6cfc6fbb482093347438c17a2081"
 
 [observability]
 enabled = true

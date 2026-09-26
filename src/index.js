@@ -117,7 +117,8 @@ export default {
       return new Response("Not found", { status: 404 });
     }
     // Telegram reenvía el secret_token configurado en setWebhook en esta cabecera.
-    if (request.headers.get("x-telegram-bot-api-secret-token") !== env.TELEGRAM_WEBHOOK_SECRET) {
+    const secret = env.TELEGRAM_WEBHOOK_SECRET;
+    if (!secret || request.headers.get("x-telegram-bot-api-secret-token") !== secret) {
       return new Response("Forbidden", { status: 403 });
     }
     const update = await request.json();
