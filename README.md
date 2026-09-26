@@ -52,6 +52,8 @@ En la primera revisión, los PRs que ya existen se marcan como vistos, así que 
 
 En el panel de Cloudflare, ve a **Workers & Pages → mdn-es-telegram-bot → Settings → Builds** y conecta este repositorio. Desde entonces, cada push a `main` se despliega solo. Los secretos no van en el repo: ya quedaron guardados en Cloudflare en el paso 4.
 
+Las variables (`TELEGRAM_CHAT_ID`, `GITHUB_REPO`, `GITHUB_LABEL`) se cambian en `wrangler.toml`, no en el panel de Cloudflare: cada despliegue las sobrescribe con lo que hay en el repo.
+
 ## Cómo detecta los PRs
 
 Como no somos administradores de `mdn/translated-content`, no podemos añadir un webhook de GitHub. En su lugar, el bot consulta la API de búsqueda cada 5 minutos. La etiqueta `l10n-es` la añade una Action poco después de abrirse el PR, así que el aviso puede tardar unos minutos más.
