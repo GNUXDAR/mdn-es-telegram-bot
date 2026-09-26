@@ -3,6 +3,8 @@
 1. Da la bienvenida a quien entra al grupo y le enlaza la guía para colaborar.
 2. Avisa en el grupo cuando se abre un PR con la etiqueta `l10n-es` en `mdn/translated-content`.
 
+**Cómo funciona, con diagramas:** <https://gnuxdar.github.io/mdn-es-telegram-bot/>
+
 Corre gratis en [Cloudflare Workers](https://developers.cloudflare.com/workers/):
 
 - **Bienvenida:** Telegram llama al Worker por webhook en cuanto alguien entra, así que la respuesta es inmediata.
