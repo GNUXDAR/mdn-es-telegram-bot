@@ -287,7 +287,7 @@ footer { border-top: 1px solid var(--rule); padding-top: 24px; display: flex; fl
         <span class="fact">bienvenida en ~1 s</span>
         <span class="fact">PRs cada 5 min</span>
         <span class="fact">US$0 al mes</span>
-        <span class="fact">134 líneas de código</span>
+        <span class="fact">196 líneas de código</span>
       </div>
     </div>
 
@@ -347,7 +347,7 @@ footer { border-top: 1px solid var(--rule); padding-top: 24px; display: flex; fl
           <rect x="290" y="56" width="180" height="84" rx="10" class="s-hot"/>
           <text x="380" y="86" text-anchor="middle" class="s-title">fetch()</text>
           <text x="380" y="107" text-anchor="middle" class="s-code">POST /telegram</text>
-          <text x="380" y="126" text-anchor="middle" class="s-sub">bienvenida · /chatid</text>
+          <text x="380" y="126" text-anchor="middle" class="s-sub">bienvenida · comandos</text>
 
           <rect x="290" y="216" width="180" height="84" rx="10" class="s-cron"/>
           <text x="380" y="246" text-anchor="middle" class="s-title">scheduled()</text>
@@ -404,7 +404,30 @@ footer { border-top: 1px solid var(--rule); padding-top: 24px; display: flex; fl
     </ol>
 
     <div class="prose muted">
-      <p>Si entran varias personas a la vez, el bot las saluda juntas en un solo mensaje. Además, el bot responde a <code>/chatid@MDNes_bot</code> con el ID del grupo, que se usa al configurarlo.</p>
+      <p>Si entran varias personas a la vez, el bot las saluda juntas en un solo mensaje.</p>
+    </div>
+  </section>
+
+  <!-- ===== Comandos ===== -->
+  <section id="comandos">
+    <div class="section-head">
+      <p class="eyebrow">Comandos</p>
+      <h2>Lo que se le puede pedir</h2>
+      <p>Cualquiera en el grupo puede escribir estos comandos. El bot responde al mensaje con datos consultados a GitHub en ese momento. Telegram los sugiere al escribir <code>/</code>.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Comando</th><th>Qué responde</th></tr></thead>
+        <tbody>
+          <tr><td><code>/ayuda</code></td><td>Los tres enlaces de la bienvenida y la lista de comandos</td></tr>
+          <tr><td><code>/prs</code></td><td>Los PRs abiertos con la etiqueta l10n-es, los 8 más recientes, con un enlace para ver todos</td></tr>
+          <tr><td><code>/issues</code></td><td>Los issues abiertos con la etiqueta l10n-es, para encontrar por dónde empezar</td></tr>
+          <tr><td><code>/chatid</code></td><td>El ID del chat. Solo sirve para configurar el bot, por eso no aparece en el menú</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="prose muted">
+      <p>En un grupo con varios bots, se escriben con el nombre: <code>/prs@MDNes_bot</code>. Un comando dirigido a otro bot se ignora. Si GitHub no responde, el bot avisa que lo intentes de nuevo en un minuto.</p>
     </div>
   </section>
 

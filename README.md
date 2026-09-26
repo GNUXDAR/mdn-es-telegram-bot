@@ -10,6 +10,17 @@ Corre gratis en [Cloudflare Workers](https://developers.cloudflare.com/workers/)
 - **Bienvenida:** Telegram llama al Worker por webhook en cuanto alguien entra, así que la respuesta es inmediata.
 - **PRs:** un Cron Trigger revisa GitHub cada 5 minutos. Los PRs ya avisados se guardan en Workers KV.
 
+## Comandos
+
+| Comando | Qué hace |
+| --- | --- |
+| `/ayuda` | Los enlaces para empezar a colaborar y la lista de comandos |
+| `/prs` | Los PRs abiertos con la etiqueta `l10n-es` |
+| `/issues` | Los issues abiertos con la etiqueta `l10n-es` |
+| `/chatid` | El ID del chat, para configurar `TELEGRAM_CHAT_ID` |
+
+En grupos con varios bots se pueden escribir como `/prs@MDNes_bot`. Para que Telegram los sugiera al escribir `/`, ejecuta `npm run set-commands`.
+
 ## Configuración
 
 Necesitas Node 22 o superior y una cuenta gratis de Cloudflare.

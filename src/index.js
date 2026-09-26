@@ -15,16 +15,23 @@ async function tg(env, method, body) {
   return data.result;
 }
 
-function send(env, chatId, html) {
+function send(env, chatId, html, replyTo) {
   return tg(env, "sendMessage", {
     chat_id: chatId,
     text: html,
     parse_mode: "HTML",
     link_preview_options: { is_disabled: true },
+    ...(replyTo && { reply_parameters: { message_id: replyTo, allow_sending_without_reply: true } }),
   });
 }
 
-// --- Bienvenida -------------------------------------------------------------
+// --- Bienvenida y comandos --------------------------------------------------
+
+const LINKS = [
+  `📘 <a href="https://github.com/mdn/translated-content/blob/main/docs/es/README.md">Guía para colaborar</a>`,
+  `🛠️ <a href="https://github.com/mdn/translated-content/blob/main/docs/es/entorno-local.md">Levantar el entorno local</a>`,
+  `📋 <a href="https://github.com/mdn/translated-content/issues?q=is%3Aissue+is%3Aopen+label%3Al10n-es">Issues abiertos en español</a>`,
+];
 
 function welcomeText(users) {
   const names = users
@@ -34,13 +41,50 @@ function welcomeText(users) {
     `¡Hola, ${names}! 👋 Te damos la bienvenida a la comunidad de traducción de <b>MDN Web Docs al español</b>.`,
     "",
     "Si quieres colaborar, estos son buenos puntos de partida:",
-    `📘 <a href="https://github.com/mdn/translated-content/blob/main/docs/es/README.md">Guía para colaborar</a>`,
-    `🛠️ <a href="https://github.com/mdn/translated-content/blob/main/docs/es/entorno-local.md">Levantar el entorno local</a>`,
-    `📋 <a href="https://github.com/mdn/translated-content/issues?q=is%3Aissue+is%3Aopen+label%3Al10n-es">Issues abiertos en español</a>`,
+    ...LINKS,
     "",
     "No hace falta experiencia previa: puedes empezar corrigiendo una traducción desde el navegador. ¡Pregunta lo que necesites!",
   ].join("\n");
 }
+
+function helpText() {
+  return [
+    "Soy el bot de la comunidad de traducción de <b>MDN Web Docs al español</b>.",
+    "",
+    ...LINKS,
+    "",
+    "/prs · PRs abiertos en español",
+    "/issues · issues abiertos para empezar a colaborar",
+    "/ayuda · este mensaje",
+  ].join("\n");
+}
+
+const LIST_LIMIT = 8;
+
+async function listText(env, kind) {
+  const filter = `is:${kind} is:open`;
+  const { total, items } = await searchGitHub(env, filter, LIST_LIMIT);
+  const what = kind === "pr" ? "PRs" : "issues";
+  const title = kind === "pr" ? "PRs" : "Issues";
+  if (!total) return `No hay ${what} abiertos en español ahora mismo.`;
+  const q = encodeURIComponent(`${filter} label:${env.GITHUB_LABEL}`);
+  const all = `https://github.com/${env.GITHUB_REPO}/${kind === "pr" ? "pulls" : "issues"}?q=${q}`;
+  return [
+    `<b>${title} abiertos en español</b> (${total})`,
+    "",
+    ...items.map((i) => `• <a href="${i.html_url}">#${i.number}</a> ${escapeHtml(i.title)}`),
+    ...(total > items.length ? ["", `<a href="${all}">Ver los ${total} en GitHub</a>`] : []),
+  ].join("\n");
+}
+
+const COMMANDS = {
+  ayuda: helpText,
+  start: helpText,
+  prs: (env) => listText(env, "pr"),
+  issues: (env) => listText(env, "issue"),
+  // Ayuda a obtener el valor de TELEGRAM_CHAT_ID durante la configuración.
+  chatid: (env, msg) => `El ID de este chat es <code>${msg.chat.id}</code>`,
+};
 
 async function handleMessage(env, msg) {
   const newcomers = (msg.new_chat_members ?? []).filter((u) => !u.is_bot);
@@ -48,18 +92,31 @@ async function handleMessage(env, msg) {
     await send(env, msg.chat.id, welcomeText(newcomers));
     return;
   }
-  // /chatid ayuda a obtener el valor de TELEGRAM_CHAT_ID durante la configuración.
-  if (/^\/chatid(@\w+)?$/.test(msg.text ?? "")) {
-    await send(env, msg.chat.id, `El ID de este chat es <code>${msg.chat.id}</code>`);
+
+  const match = /^\/([a-z]+)(?:@(\w+))?(?:\s|$)/i.exec(msg.text ?? "");
+  if (!match) return;
+  const [, name, target] = match;
+  // En un grupo con varios bots, /cmd@otro_bot no es para nosotros.
+  if (target && target.toLowerCase() !== env.BOT_USERNAME.toLowerCase()) return;
+  const command = COMMANDS[name.toLowerCase()];
+  if (!command) return;
+
+  let text;
+  try {
+    text = await command(env, msg);
+  } catch (e) {
+    console.error(e.message);
+    text = "No pude consultar GitHub en este momento. Inténtalo de nuevo en un minuto.";
   }
+  await send(env, msg.chat.id, text, msg.message_id);
 }
 
 // --- PRs en español ---------------------------------------------------------
 
-async function fetchSpanishPRs(env) {
-  const q = encodeURIComponent(`repo:${env.GITHUB_REPO} is:pr label:${env.GITHUB_LABEL}`);
+async function searchGitHub(env, filter, perPage) {
+  const q = encodeURIComponent(`repo:${env.GITHUB_REPO} label:${env.GITHUB_LABEL} ${filter}`);
   const res = await fetch(
-    `https://api.github.com/search/issues?q=${q}&sort=created&order=desc&per_page=30`,
+    `https://api.github.com/search/issues?q=${q}&sort=created&order=desc&per_page=${perPage}`,
     {
       headers: {
         accept: "application/vnd.github+json",
@@ -69,7 +126,12 @@ async function fetchSpanishPRs(env) {
     },
   );
   if (!res.ok) throw new Error(`GitHub ${res.status}: ${await res.text()}`);
-  return (await res.json()).items;
+  const data = await res.json();
+  return { total: data.total_count, items: data.items };
+}
+
+async function fetchSpanishPRs(env) {
+  return (await searchGitHub(env, "is:pr", 30)).items;
 }
 
 function prText(pr) {

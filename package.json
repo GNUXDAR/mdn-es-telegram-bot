@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "wrangler dev --test-scheduled",
     "deploy": "wrangler deploy",
-    "set-webhook": "node --env-file=.dev.vars scripts/set-webhook.mjs"
+    "set-webhook": "node --env-file=.dev.vars scripts/set-webhook.mjs",
+    "set-commands": "node --env-file=.dev.vars scripts/set-commands.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.141.0"

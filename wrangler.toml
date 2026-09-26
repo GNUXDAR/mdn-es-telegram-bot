@@ -9,6 +9,7 @@ crons = ["*/5 * * * *"]
 [vars]
 GITHUB_REPO = "mdn/translated-content"
 GITHUB_LABEL = "l10n-es"
+BOT_USERNAME = "MDNes_bot"
 # ID del grupo de Telegram (negativo). Obtenlo escribiendo /chatid en el grupo.
 TELEGRAM_CHAT_ID = "-1001587248015"
 
