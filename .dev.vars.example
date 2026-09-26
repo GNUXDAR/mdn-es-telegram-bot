@@ -1,0 +1,8 @@
+# Token que entrega @BotFather
+TELEGRAM_BOT_TOKEN=
+
+# Cadena aleatoria que Telegram enviará en cada petición al webhook (genera una con: openssl rand -hex 32)
+TELEGRAM_WEBHOOK_SECRET=
+
+# Opcional: token de GitHub sin permisos para más límite de peticiones
+GITHUB_TOKEN=

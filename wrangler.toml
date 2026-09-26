@@ -1,0 +1,21 @@
+name = "mdn-es-telegram-bot"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Revisa PRs nuevos cada 5 minutos
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+GITHUB_REPO = "mdn/translated-content"
+GITHUB_LABEL = "l10n-es"
+# ID del grupo de Telegram (negativo). Obtenlo escribiendo /chatid en el grupo.
+TELEGRAM_CHAT_ID = ""
+
+# Crea el namespace con `npx wrangler kv namespace create STATE` y pega aquí el id.
+[[kv_namespaces]]
+binding = "STATE"
+id = "REEMPLAZA_CON_EL_ID_DEL_NAMESPACE"
+
+[observability]
+enabled = true

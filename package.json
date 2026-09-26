@@ -1,0 +1,17 @@
+{
+  "name": "mdn-es-telegram-bot",
+  "version": "1.0.0",
+  "description": "Bot de Telegram para la comunidad de MDN Web Docs en español",
+  "author": "Arturo Cabrera (https://github.com/GNUXDAR)",
+  "repository": "github:GNUXDAR/mdn-es-telegram-bot",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --test-scheduled",
+    "deploy": "wrangler deploy",
+    "set-webhook": "node --env-file=.dev.vars scripts/set-webhook.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.141.0"
+  }
+}
